@@ -7,28 +7,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-data class PokemonUiState(
-    val pokemons: List<Pokemon> = emptyList(),
-    val isLoading: Boolean = false
-)
-
 class PokemonViewModel(
     private val repository: PokemonRepository = PokemonRepository()
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(PokemonUiState())
-    val uiState: StateFlow<PokemonUiState> = _uiState.asStateFlow()
+    private val _pokemons = MutableStateFlow<List<Pokemon>>(emptyList())
+    val pokemons: StateFlow<List<Pokemon>> = _pokemons.asStateFlow()
 
     init {
         loadPokemons()
     }
 
     private fun loadPokemons() {
-        _uiState.value = _uiState.value.copy(isLoading = true)
-        val list = repository.getPokemons()
-        _uiState.value = _uiState.value.copy(
-            pokemons = list,
-            isLoading = false
-        )
+        _pokemons.value = repository.getPokemons()
     }
 }

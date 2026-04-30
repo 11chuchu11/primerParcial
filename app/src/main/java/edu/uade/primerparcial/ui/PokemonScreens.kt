@@ -21,12 +21,13 @@ import coil.compose.AsyncImage
 import edu.uade.primerparcial.data.Pokemon
 import edu.uade.primerparcial.logic.PokemonViewModel
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PokemonListScreen(
     viewModel: PokemonViewModel = viewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val pokemons by viewModel.pokemons.collectAsState()
 
     Scaffold(
         topBar = {
@@ -44,25 +45,19 @@ fun PokemonListScreen(
             )
         }
     ) { paddingValues ->
-        if (uiState.isLoading) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(vertical = 12.dp)
-            ) {
-                items(
-                    items = uiState.pokemons,
-                    key = { it.id }
-                ) { pokemon ->
-                    PokemonItem(pokemon = pokemon)
-                }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(vertical = 12.dp)
+        ) {
+            items(
+                items = pokemons,
+                key = { it.id }
+            ) { pokemon ->
+                PokemonItem(pokemon = pokemon)
             }
         }
     }
